@@ -3651,6 +3651,10 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, BlockValidationS
             LogPrintf("ERROR: %s: prev block invalid\n", __func__);
             return state.Invalid(BlockValidationResult::BLOCK_INVALID_PREV, "bad-prevblk");
         }
+        // FXTC BEGIN
+        if (fCheckpointsEnabled && pindexPrev->nHeight < chainparams.GetConsensus().nlastValidPowHashHeight && !Checkpoints::IsExpectedCheckpoint(chainparams.Checkpoints(), pindexPrev->nHeight + 1, block.GetHash()))
+            return state.DoS(100, error("%s: Checkpoints::IsExpectedCheckpoint(): invalid checkpoint at height %d", __func__, pindexPrev->nHeight + 1), REJECT_CHECKPOINT, "bad-chackpoint");
+        // FXTC END
         if (!ContextualCheckBlockHeader(block, state, chainparams, pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), state.ToString());
 

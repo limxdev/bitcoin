@@ -80,6 +80,7 @@ struct Params {
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
+    int nlastValidPowHashHeight; // BTX for faster loading
 
     /**
      * If true, witness commitments contain a payload equal to a Bitcoin Script solution
